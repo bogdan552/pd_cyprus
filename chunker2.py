@@ -7,9 +7,11 @@ def chunker(df, size_from: int, size_to: int):
     sub_size = 0
     for i in range(0, len(df)):
 
+        # Набираем минимальный размер чанка
         if cur_size < size_from:
             cur_size += 1
             continue
+
         if sub_size > 0:
             sub_size += 1
 
@@ -18,8 +20,11 @@ def chunker(df, size_from: int, size_to: int):
                 sub_size_index = i
             sub_size += 1
 
+            # Проверяем, чтобы размер чанка не превышал size_to
             if sub_size + cur_size >= size_to:
                 yield df[start_index:sub_size_index]
+
+                # Текущий размер чанка становится как у сабчанка
                 start_index = sub_size_index
                 cur_size = i-sub_size_index
                 sub_size = 0
@@ -40,7 +45,7 @@ dfs = pd.date_range(
     "2023-01-01 00:00:06",
     freq="s"
 )
-df = pd.DataFrame({"dt": dfs.repeat(9)})
+df = pd.DataFrame({"dt": dfs.repeat(8)})
 
 
 for chunk in chunker(df, chunk_size_from, chunk_size_to):

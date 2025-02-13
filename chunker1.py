@@ -5,10 +5,12 @@ def chunker(df, size_from: int):
     cur_size = 0
     for i in range(0, len(df)):
 
+        # Набираем минимальный размер чанка
         if cur_size < size_from:
             cur_size += 1
             continue
 
+        # Если дата поменялась, то это конец чанка
         if df["dt"].iloc[i] != df["dt"].iloc[i-1]:
             yield df[start_index:i]
             start_index = i
@@ -26,7 +28,7 @@ dfs = pd.date_range(
     "2023-01-01 00:00:06",
     freq="s"
 )
-df = pd.DataFrame({"dt": dfs.repeat(9)})
+df = pd.DataFrame({"dt": dfs.repeat(8)})
 
 
 for chunk in chunker(df, chunk_size_from):

@@ -3,6 +3,7 @@ import numpy as np
 
 def chunker(df, size_from: int, size_to: int):
     dt = df["dt"].values
+    # Находим дифы с использованием С
     split_indexes = np.concatenate(([0], np.nonzero(np.diff(dt))[0] + 1, [len(dt)]))
 
 
@@ -14,9 +15,11 @@ def chunker(df, size_from: int, size_to: int):
         group_size = group_end - group_start
         cur_size += group_size
 
+        # Набираем минимальный размер чанка
         if cur_size < size_from:
             continue
 
+        # Если размер чанка превышает size_to, то отдаем без последней группы
         if cur_size > size_to:
             yield df[chunk_start:group_start]
             chunk_start = group_start
